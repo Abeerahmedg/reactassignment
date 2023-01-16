@@ -1,32 +1,26 @@
 import logo from './logo.svg';
 import './App.css';
 //import {Header} from './components/Header';
-import PersonList from './components/PersonList'
-import RemovePerson from './components/RemovePerson';
+import {PersonList} from './components/PersonList';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import CreatePerson from './components/CreatePerson';
+import {PersonDetails}  from './components/PersonDetails';
 
 
 function App() {
   return (
+    <Router>
   <div className="App">
 <img src={logo} className="App-logo" alt="logo" />
- <PersonList/>
- <RemovePerson/>
+<Routes>
+  <Route path="/"  element={<PersonList/>}/>
+  <Route path='/CreatePerson' element={<CreatePerson/>} />
+  <Route path='/PersonDetails/.id' element={<PersonDetails/>}/>
+</Routes>
+
   </div>
-  //
-    // 
-    //   <header className="App-header">
-        
-        
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-        
-    //     </a>
-    //   </header>
-    
+  </Router>
+  
   );
 }
 
