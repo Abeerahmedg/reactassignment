@@ -30,6 +30,18 @@ export default function PersonDetails (){
         <></>
        )
     }
+    async function DeletePerson(e) {
+        const id = e.currentTarget.dataset.id;
+        await axios.delete(`https://localhost:7031/api/react/${id}`)
+        .then(result => {
+          if(result.status === 200) {
+            console.log("Person deleted successfully")
+          }
+          else if(result.status === 404) {
+            console.log("Person not found")
+          }
+        })
+      }
     return(
         <div className="container">
             <br/>
@@ -61,6 +73,11 @@ export default function PersonDetails (){
                         ))}
                         </td>
                     </tr>
+                    <br/>
+
+                    
+            <button onClick={DeletePerson} data-id={person.id}>Delete</button>
+            <br />
                     <br />
                     <Link to="/">
         <button>Back to the list</button>

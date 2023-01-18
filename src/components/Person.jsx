@@ -31,7 +31,7 @@ export function Person(props){
             <button onClick={DeletePerson} data-id={person.id}>Delete</button>
             </td>
              <td>
-                <button >  <Link to={`/PersonDetails/${person.id}`} state={{person: person}}>Details</Link></button>
+                <button>  <Link to={`/PersonDetails/${person.id}`} state={{person: person}}>Details</Link></button>
             </td> 
         </tr>
     )

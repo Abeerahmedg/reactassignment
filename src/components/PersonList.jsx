@@ -41,10 +41,14 @@ export function PersonList () {
             }
           </tbody>
       </table>
-      <button className='btn' onClick={() => setSortState("descending")}>Sort by name</button>
+      <br></br>
+      <div>
+      <button className='btn' onClick={() => setSortState("descending")}>Sort by name</button></div> 
+      <br/>
+      <div>
       <Link to="/Create">
         <button>Add new writer</button>
-      </Link>
+      </Link></div>
     </div>
   )
 }
