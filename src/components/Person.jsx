@@ -1,13 +1,24 @@
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import PersonDetails from './PersonDetails';
 
 export function Person(props){
     const person = props.person
 
-    async function DeletePerson(props){
-        await axios.delete(`https://localhost:7031/api/react/${props}`)
-        .then(response => response.data)
-    }
+    async function DeletePerson(e) {
+        const id = e.currentTarget.dataset.id;
+        await axios.delete(`https://localhost:7031/api/react/${id}`)
+        .then(result => {
+          if(result.status === 200) {
+            console.log("Person deleted successfully")
+          }
+          else if(result.status === 404) {
+            console.log("Person not found")
+          }
+        })
+      }
+     
+
     return(
         <tr>
             <td>
@@ -17,14 +28,11 @@ export function Person(props){
                 <p>{person.numberOfBooks}</p>
             </td>
             <td>
-                <button onClick={()=> DeletePerson(person.id)}>Delete</button>
+            <button onClick={DeletePerson} data-id={person.id}>Delete</button>
             </td>
-            <td>
-                <Link to={person.id} state={{ person: person }}>
-                    <button className="btn btn-outline-dark" >View Details</button>
-                </Link>
-            </td>
+             <td>
+                <button >  <Link to={`/PersonDetails/${person.id}`} state={{person: person}}>Details</Link></button>
+            </td> 
         </tr>
     )
-
 }

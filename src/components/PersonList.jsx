@@ -1,56 +1,50 @@
-import React from "react";
-import { PersonDetails } from "./PersonDetails";
-import { useState } from "react";
+import React from 'react';
+import axios from 'axios';
+import { Person } from './Person';
+import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 
-export default function PersonList(props) {
-  const [sort, setSort] = useState(false);
+export function PersonList () {
+  
+  const [person, setPerson] = useState([]);
+  const [sortState, setSortState] = useState("none");
+  const [striped, setStriped] = useState(true);
+
+  const sortMethods = {
+    none: { method: (a, b) => null },
+    descending: { method: (a, b) => a.name.localeCompare(b.name) },
+  };
+
+  useEffect(() => {
+    axios.get("https://localhost:7031/api/react")
+    .then(result => setPerson(result.data))
+  },[]);
 
   return (
-    <div>
-      <button
-        className="btn btn-danger my-3"
-        onClick={() => {
-          setSort(!sort);
-          props.onButtonClick()
-        }}
-      >
-        Sort people by name
-      </button>
-      <table className="table my-2">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Information</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sort
-            ? props.myPeople
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((person) => (
-                  <tr>
-                    <td key={person.personId}>{person.name}</td>
-                    <td>
-                      <PersonDetails
-                        myperson={person}
-                        onButtonClick={props.onButtonClick}
-                      />
-                    </td>
-                  </tr>
-                ))
-            : props.myPeople.map((person) => (
-                <tr>
-                  <td key={person.personId}>{person.name}</td>
-                  <td>
-                    <PersonDetails
-                      myperson={person}
-                      onButtonClick={props.onButtonClick}
-                    />
-                  </td>
-                </tr>
-              ))}
-        </tbody>
+    <div className="container">
+      <h1 id="main-heading">Welcome to my website</h1>
+      <h3> Writers Table:</h3>
+      <br/>
+      <table striped={striped.toString()}>
+          <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Number of Books</th>
+                  <th>Option</th>
+                  <th>Option</th>
+              </tr>
+          </thead>
+          <tbody>
+            {person.sort(sortMethods[sortState].method).map((person) => (
+              <Person key={person.id} person={person} />
+            ))
+            }
+          </tbody>
       </table>
+      <button className='btn' onClick={() => setSortState("descending")}>Sort by name</button>
+      <Link to="/Create">
+        <button>Add new writer</button>
+      </Link>
     </div>
-  );
+  )
 }

@@ -1,39 +1,73 @@
-import React from "react";
+import React from 'react';
 import axios from 'axios';
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-export class PersonDetails extends React.Component {
-  state = { showing: false };
+export default function PersonDetails (){
+    const location = useLocation();
+    const person = location.state?.person;
+   
+    const id = person.id;
+    const navigate = useNavigate();
+    const [details, setDetails] = useState(null);
 
-  handleClick = (arg) =>{
-    axios.delete(`https://localhost:7031/api/react/${arg.personId}`)
-    .then(result =>{
-      this.props.onButtonClick()
-      console.log(result);
-      console.log(result.data);
-})
+    useEffect(() => {
+      axios.get(`https://localhost:7031/api/react/${id}`)
+        .then(result => setDetails(result.data))
+        .then(result => {
+      if(result.status === 200) {
+        setDetails(result.data)
+      } else if(result.status === 404) {
+        console.log("Person not found")
+      }
+    })
+    }, [id]);
+
+    if(!details)
+    {
+       return(
+        <></>
+       )
+    }
+    return(
+        <div className="container">
+            <br/>
+            <br/>
+            <h3>Writer Details:</h3>
+            <br></br>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>{person.name}</td>
+                    </tr>
+                    <tr>
+                        <th>Number of Books</th>
+                        <td>{person.numberOfBooks}</td>
+                    </tr>
+                    <tr>
+                        <th>City</th>
+                        <td>{details.city}</td>
+                    </tr>
+                    <tr>
+                        <th>Country</th>
+                        <td>{details.country}</td>
+                    </tr>
+                    <tr>
+                        <th>Languages</th>
+                        <td>{details.languages?.map((language) => (
+                            <p>{language}</p>
+                        ))}
+                        </td>
+                    </tr>
+                    <br />
+                    <Link to="/">
+        <button>Back to the list</button>
+      </Link>
+                </tbody>
+            </table>
+        </div>
+        )
 }
 
-  render() {
-    const { showing } = this.state;
-    const { myperson } = this.props;
-    return (
-      <div>
-        <button
-          className="btn btn-primary"
-          onClick={() => this.setState({ showing: !showing })}
-        >
-          Details
-        </button>
-        {showing ? (
-          <ul>
-            <li>Name: {myperson.name}</li>
-            <li>Number of books: {myperson.numberOfBooks}</li>
-            <li>City: {myperson.city.cityName}</li>
-            <li>Country: {myperson.city.country.countryName}</li>
-            <button className="btn btn-danger" type="submit" name="personId" onClick={this.handleClick.bind(this,myperson)}>Delete</button>
-          </ul>
-        ) : null}
-      </div>
-    );
-  }
-}
